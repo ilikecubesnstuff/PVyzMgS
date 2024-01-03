@@ -1,0 +1,19 @@
+[project]
+name = "PVyzMgS"
+version = "0.1.0"
+description = "Simulation software with scientific plotting & visualization utilities, inspired by the \"Modelling and Visualization in Physics\" course (PHYS10035) taught by the School of Physics and Astronomy at the University of Edinburgh."
+authors = [
+    {name = "ilikecubesnstuff", email = "25328250+ilikecubesnstuff@users.noreply.github.com"},
+]
+dependencies = []
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+package-type = "library"
