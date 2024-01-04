@@ -434,9 +434,9 @@ def display_plots(path, errors="bootstrap"):
 
 def prepare():
     # Glauber
-    path = Path("ising/glauber_10k.txt")
+    path = Path("ising/glauber_1k.txt")
     N = 50
-    sweeps = 10_000
+    sweeps = 1000
     sim = Glauber2D((N, N), random=False)
 
     measurements, headers = run_experiment_over(
@@ -445,9 +445,9 @@ def prepare():
     save_data(measurements, path=path, headers=headers)
 
     # Kawasaki
-    path = Path("ising/kawasaki_10k.txt")
+    path = Path("ising/kawasaki_1k.txt")
     N = 50
-    sweeps = 10_000
+    sweeps = 1000
     sim = Kawasaki2D((N, N), random=False)
 
     measurements, headers = run_experiment_over(
@@ -476,10 +476,10 @@ def display():
     animate(gen)
 
     # Quantitative analysis and plots
-    display_plots(Path("ising/glauber_10k.txt"), errors="bootstrap")
-    display_plots(Path("ising/glauber_10k.txt"), errors="jackknife")
-    display_plots(Path("ising/kawasaki_10k.txt"), errors="bootstrap")
-    display_plots(Path("ising/kawasaki_10k.txt"), errors="jackknife")
+    display_plots(Path("ising/glauber_1k.txt"), errors="bootstrap")
+    display_plots(Path("ising/glauber_1k.txt"), errors="jackknife")
+    display_plots(Path("ising/kawasaki_1k.txt"), errors="bootstrap")
+    display_plots(Path("ising/kawasaki_1k.txt"), errors="jackknife")
 
 
 def main():
