@@ -1,10 +1,7 @@
-import logging
 from abc import abstractmethod
 
 import numpy as np
 from tqdm import tqdm
-
-logger = logging.getLogger("mvp." + __name__)
 
 
 class Simulation:

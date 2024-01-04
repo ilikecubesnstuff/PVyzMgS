@@ -1,9 +1,5 @@
-import logging
-
 import matplotlib.pyplot as plt
 import numpy as np
-
-logger = logging.getLogger("mvp." + __name__)
 
 
 def display_grid(arr, **imshow_kwargs):

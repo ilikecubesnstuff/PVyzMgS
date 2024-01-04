@@ -1,7 +1,5 @@
 import logging
 
-import matplotlib
-import matplotlib.figure
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation as fanim
 from mpl_toolkits.axes_grid1 import make_axes_locatable

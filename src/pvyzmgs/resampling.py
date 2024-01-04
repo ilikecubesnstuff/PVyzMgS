@@ -1,8 +1,4 @@
-import logging
-
 import numpy as np
-
-logger = logging.getLogger("mvp." + __name__)
 
 
 def bootstrap(f, values, samples=1000):
