@@ -37,7 +37,7 @@ def animate(
         ax.set_title(f"{title(state)}")
         im.set_data(component(state))
 
-    anim = fanim(fig, update, gen, interval=33)
+    anim = fanim(fig, update, gen, interval=33, save_count=300)
     if path:
         if path.exists():
             logger.warning(f"file {path} already exists - overwriting animation")
@@ -74,7 +74,7 @@ def animate_with_cb(
         im = ax.imshow(state.grid, **imshow_kwargs)
         fig.colorbar(im, cax=cax)
 
-    anim = fanim(fig, update, gen, interval=33)
+    anim = fanim(fig, update, gen, interval=33, save_count=300)
     if path:
         if path.exists():
             logger.warning(f"file {path} already exists - overwriting animation")
@@ -120,7 +120,7 @@ def animate_with_plot(
         im.set_data(state.grid)
         return im, line
 
-    anim = fanim(fig, update, gen, interval=33)
+    anim = fanim(fig, update, gen, interval=33, save_count=300)
     if path:
         if path.exists():
             logger.warning(f"file {path} already exists - overwriting animation")
