@@ -12,7 +12,7 @@ def save_data(measurements, path, overwrite=False, headers=tuple()):
     if not parent.exists():
         logger.warning(f"directory {parent} does not exist - creating folders.")
         parent.mkdir(parents=True)
-    if path.exists():
+    if path.exists() and not overwrite:
         new_name = path.stem + "_copy"
         logger.warning(
             f"file at {path} already exists - writing to {new_name} instead ({overwrite=})"
@@ -36,7 +36,7 @@ def read_data(path, print_headers=True):
 
 
 def save_array(arr, path, overwrite=False):
-    save_data([arr.flatten()], path=path, headers=(arr.shape,))
+    save_data([arr.flatten()], path=path, headers=(arr.shape,), overwrite=overwrite)
 
 
 def read_array(path):
