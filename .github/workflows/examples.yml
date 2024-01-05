@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v3
       - run: |
+          pdm install
           cd ./examples/boundary_value_problems
           pdm run bvp.py test
 
@@ -26,6 +27,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v3
       - run: |
+          pdm install
           cd ./examples/game_of_life
           pdm run gol.py test
 
@@ -36,6 +38,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v3
       - run: |
+          pdm install
           cd ./examples/ising_model
           pdm run ising.py test
           pdm run antiferromagnet.py test
@@ -47,6 +50,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v3
       - run: |
+          pdm install
           cd ./examples/rock_paper_scissors
           pdm run rps.py test
 
@@ -57,5 +61,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v3
       - run: |
+          pdm install
           cd ./examples/sirs_model
           pdm run sirs.py test
