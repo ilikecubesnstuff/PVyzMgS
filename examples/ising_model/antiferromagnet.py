@@ -265,7 +265,7 @@ def run_functional_h(shape, h_func):
     animate(gen)
 
 
-def measure_field_vs_sm(shape, h_func):
+def measure_field_vs_sm(shape, h_func, max_iter=20_000):
     measurements = []
     headers = (
         ", ".join(("Time", "Maximum Field Strength", "Staggered Magnetization")),
@@ -276,9 +276,9 @@ def measure_field_vs_sm(shape, h_func):
 
     # run simulation
     sim = AntiferromagnetWithH(shape, random=False)
-    gen = sim.run(h_func, steps=20_000, eq=0)
+    gen = sim.run(h_func, steps=max_iter, eq=0)
     gen = record_measurements(gen, time, field, sm, record=measurements)
-    gen = progress_bar(gen, total=20_000)
+    gen = progress_bar(gen, total=max_iter)
     no_animation(gen)
 
     return measurements, headers
@@ -330,15 +330,11 @@ def prepare():
     ms, hs = run_experiment_over(hs, sim)
     save_data(ms, Path("antiferromagnet/hs10.txt"), headers=hs)
 
-    h_func = functional_h((L, L))(
-        h0=10, P=25, tau=10_000
-    )  # using values from the paper
+    h_func = functional_h((L, L))(h0=10, P=25, tau=10_000)
     ms, hs = measure_field_vs_sm((L, L), h_func)
     save_data(ms, path=Path("antiferromagnet/p25.txt"), headers=hs)
 
-    h_func = functional_h((L, L))(
-        h0=10, P=10, tau=10_000
-    )  # using values from the paper
+    h_func = functional_h((L, L))(h0=10, P=10, tau=10_000)
     ms, hs = measure_field_vs_sm((L, L), h_func)
     save_data(ms, path=Path("antiferromagnet/p10.txt"), headers=hs)
 
@@ -348,7 +344,33 @@ def display():
     display_field_vs_sm(Path("antiferromagnet/p25.txt"))
 
 
+def test():
+    L = 50
+    sim = Antiferromagnet((L, L), random=False)
+    gen = sim.run(5, steps=200, eq=0)
+    no_animation(progress_bar(gen, total=200))
+
+    hs = np.linspace(0, 10, 11)
+    ms, hs = run_experiment_over(hs, sim, max_iter=100)
+    save_data(ms, Path("test/hs10.txt"), headers=hs, overwrite=True)
+
+    h_func = functional_h((L, L))(h0=10, P=10, tau=1000)
+    ms, hs = measure_field_vs_sm((L, L), h_func, max_iter=1000)
+    save_data(ms, path=Path("test/p10.txt"), headers=hs, overwrite=True)
+
+    display_experiment_data(Path("test/hs10.txt"))
+    display_field_vs_sm(Path("test/p10.txt"))
+
+
 def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
     if not Path("antiferromagnet/").exists():
         print("running preparation script")
         prepare()

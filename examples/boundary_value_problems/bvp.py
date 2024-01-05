@@ -310,7 +310,49 @@ def display():
     w_opt = optimal_w(sim, 0.001, bc=bc)
 
 
+def test():
+    rho = np.zeros((50, 50))
+    rho[25, 25] = 1
+    zslice = lambda s: s.grid
+
+    bc = BoundaryCondition.null_edge(rho.shape)
+    tol = 1e-4
+
+    sim = PoissonJacobi(rho)
+    gen = sim.run(bc=bc)
+    gen = run_until(gen, lambda s: s.total_delta < tol)
+    gen = skip_frames(gen, 50)
+    no_animation(progress_bar(gen))
+
+    sim = PoissonGaussSeidel(rho)
+    gen = sim.run(bc=bc)
+    gen = run_until(gen, lambda s: s.total_delta < tol)
+    gen = skip_frames(gen, 50)
+    no_animation(progress_bar(gen))
+
+    sim = PoissonSOR(rho)
+    gen = sim.run(w=2, bc=bc)
+    gen = run_until(gen, lambda s: s.total_delta < tol)
+    gen = skip_frames(gen, 50)
+    no_animation(progress_bar(gen))
+
+    # Optimal relaxation parameter
+    rho = np.zeros((50, 50))
+    rho[25, 25] = 1
+    bc = BoundaryCondition.null_edge(rho.shape)
+    sim = PoissonSOR(rho)
+    w_opt = optimal_w(sim, 0.01, bc=bc)
+
+
 def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
     if not Path("bvp/").exists():
         print("running preparation script")
         prepare()

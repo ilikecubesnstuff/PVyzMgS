@@ -347,7 +347,66 @@ def display():
     display_immune_fraction_plot(Path("data/immune.txt"))
 
 
+def test():
+    sim = SIRS((50, 50))
+
+    gen = sim.randomize().run(0.5, 0.5, 0.5, steps=1000)
+    no_animation(progress_bar(gen, total=1000, desc="test run with p1=p2=p3=0.5"))
+
+    p1s = np.linspace(0, 1, 6)
+    p3s = np.linspace(0, 1, 6)
+    inffrac, infvar = record_phase_diagram(p1s, p3s, sim, max_iter=100)
+    print(inffrac, infvar)
+    save_array(inffrac, Path("test/inffrac.txt"), overwrite=True)
+    save_array(infvar, Path("test/infvar.txt"), overwrite=True)
+
+    p1s = np.linspace(0, 1, 11)
+    measurements, headers = record_phase_diagram_slice(p1s, sim, max_iter=100)
+    save_data(
+        measurements, path=Path("test/p1s_rough.txt"), headers=headers, overwrite=True
+    )
+
+    sim = Immunity((50, 50))
+    measurements, headers = immune_fraction(sim, 10, max_iter=100)
+    save_data(
+        measurements, path=Path("test/immune.txt"), headers=headers, overwrite=True
+    )
+    sim = SIRS((50, 50)).randomize()
+
+    # Suitable parameters
+    no_animation(
+        progress_bar(sim.run(0.7, 0.7, 0.7, steps=100), total=100, desc="dynamic eq")
+    )
+    no_animation(
+        progress_bar(sim.run(0.8, 0.1, 0.012, steps=100), total=100, desc="waves")
+    )
+    no_animation(
+        progress_bar(sim.run(0.5, 0.6, 0.1, steps=100), total=100, desc="absorbing")
+    )
+
+    # Phase diagram (p2 = 0.5)
+    inffrac = read_array(Path("test/inffrac.txt"))
+    display_grid(inffrac, cmap="inferno")
+
+    infvar = read_array(Path("test/infvar.txt"))
+    display_grid(infvar, cmap="inferno")
+
+    # Cut of variance along (p1 = p2 = 0.5)
+    display_phase_diagram_slice(Path("test/p1s_rough.txt"))
+
+    # Minimal immune fraction
+    display_immune_fraction_plot(Path("test/immune.txt"))
+
+
 def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
     if not Path("data/").exists():
         print("running preparation script")
         prepare()

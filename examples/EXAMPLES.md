@@ -12,13 +12,13 @@ Includes presets for popular starting configurations ([gliders](https://conwayli
 
 ## SIRS Model
 
-Simulation of a square lattice with 3 states (susceptible, infectious, and recovered, see [SIRS model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology)).
+Simulation of a square lattice with 3 states (susceptible, infectious, and recovered, see [SIRS model](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology)) as a cellular automaton.
 Also includes simulations with a 4th state of "immune", and displays phase transitions between the different types of states (absorbing states, waves, and dynamic equilibria).
 
 ## Cahn Hilliard Simulation
 
 Models phase separation with the [Cahn-Hilliard Equation](https://en.wikipedia.org/wiki/Cahn%E2%80%93Hilliard_equation).
-An even mix produces [spinodal decomposition](https://en.wikipedia.org/wiki/Spinodal_decomposition) while uneven mixes produce [ostwald ripening](https://en.wikipedia.org/wiki/Ostwald_ripening).
+An even mix produces [spinodal decomposition](https://en.wikipedia.org/wiki/Spinodal_decomposition) while uneven mixes produce [droplet growth](https://en.wikipedia.org/wiki/Ostwald_ripening).
 
 ## Boundary Value Problems
 
@@ -35,5 +35,5 @@ A degradation process model is simulated on a square lattice.
 
 ## Rock, Paper, Scissors
 
-Simulation of a square lattice with [rock, paper, and scissors](https://en.wikipedia.org/wiki/Rock_paper_scissors) states.
+Simulation of a square lattice with [rock, paper, and scissors](https://en.wikipedia.org/wiki/Rock_paper_scissors) states as a cellular automaton.
 Analyses the dynamics of the minority fraction with both deterministic and random update rules.

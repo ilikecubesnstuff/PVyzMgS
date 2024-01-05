@@ -482,7 +482,63 @@ def display():
     display_plots(Path("ising/kawasaki_1k.txt"), errors="jackknife")
 
 
+def test():
+    # Glauber
+    path = Path("test/glauber.txt")
+    N = 20
+    sweeps = 100
+    sim = Glauber2D((N, N), random=False)
+
+    measurements, headers = run_experiment_over(
+        np.arange(1, 3.05, 0.2), sim, sweeps=sweeps
+    )
+    save_data(measurements, path=path, headers=headers, overwrite=True)
+
+    # Kawasaki
+    path = Path("test/kawasaki.txt")
+    N = 20
+    sweeps = 100
+    sim = Kawasaki2D((N, N), random=False)
+
+    measurements, headers = run_experiment_over(
+        np.arange(1, 3.05, 0.2), sim, sweeps=sweeps
+    )
+    save_data(measurements, path=path, headers=headers, overwrite=True)
+
+    # Basic functionality of the code
+    N = 20
+    gsim = Glauber2D((N, N), random=False)
+    ksim = Kawasaki2D((N, N), random=False)
+
+    # Glauber at low temp
+    gen = gsim.run(1, steps=1000, eq=0)
+    animate(progress_bar(gen, total=1000, desc="glauber low"))
+    # Glauber at high temp
+    gen = gsim.run(3, steps=1000, eq=0)
+    animate(progress_bar(gen, total=1000, desc="glauber high"))
+    # Kawasaki at low temp
+    gen = ksim.run(1, steps=1000, eq=0)
+    animate(progress_bar(gen, total=1000, desc="kawasaki low"))
+    # Kawasaki at high temp
+    gen = ksim.run(3, steps=1000, eq=0)
+    animate(progress_bar(gen, total=1000, desc="kawasaki high"))
+
+    # Quantitative analysis and plots
+    display_plots(Path("test/glauber.txt"), errors="bootstrap")
+    display_plots(Path("test/glauber.txt"), errors="jackknife")
+    display_plots(Path("test/kawasaki.txt"), errors="bootstrap")
+    display_plots(Path("test/kawasaki.txt"), errors="jackknife")
+
+
 def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
     if not Path("ising/").exists():
         print("running preparation script")
         prepare()

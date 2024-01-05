@@ -201,7 +201,33 @@ def display():
     measure_speed_of(lwss, steps=80)
 
 
+def test():
+    sim = GOL((50, 50))
+
+    path = Path("test/lifetimes.txt")
+    measurements, headers = measure_equilibration_time(
+        sim, 100, path=path, max_iter=500
+    )
+    save_data(measurements, path=path, headers=headers, overwrite=True)
+
+    # Histogram of equilibration time
+    path = Path("test/lifetimes.txt")
+    display_equilibration_time(path=path)
+
+    # Speed of a glider state (and LWSS state)
+    measure_speed_of(glider, steps=80)
+    measure_speed_of(lwss, steps=80)
+
+
 def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
     if not Path("gol/").exists():
         print("running preparation script")
         prepare()

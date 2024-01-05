@@ -325,6 +325,43 @@ def prepare():
     display_heatmap(p2s, p3s, Path("data/minvar.txt"), cmap="inferno")
 
 
+def test():
+    # test runs
+    N = 50
+    start = RockPaperScissors.wedges((N, N))
+    sim = RockPaperScissors.from_array(start)
+    gen = sim.run(1000, eq=0)
+    no_animation(progress_bar(gen, total=1000, desc="rps run"))
+
+    sim = RandomRockPaperScissors((N, N)).randomize()
+    gen = sim.run(0.5, 0.5, 0.5, 1000, eq=0)
+    no_animation(progress_bar(gen, total=1000, desc="rrps run"))
+
+    # p3s data set
+    N = 50
+    sim = RandomRockPaperScissors((N, N))
+    path = Path("test/p3s.txt")
+    p3s = np.linspace(0, 0.1, 11)
+    ms, hs = minority_fraction(p3s, sim, max_iter=100)
+    save_data(ms, path, headers=hs, overwrite=True)
+
+    display_minority_fraction(path)
+
+    # minority population data sets
+    N = 50
+    sim = RandomRockPaperScissors((N, N))
+    p2s = np.linspace(0, 0.3, 4)
+    p3s = np.linspace(0, 0.3, 4)
+    minority, minfrac, minvar = heatmap(p2s, p3s, sim, max_iter=100)
+    save_array(minority, Path("test/minority.txt"), overwrite=True)
+    save_array(minfrac, Path("test/minfrac.txt"), overwrite=True)
+    save_array(minvar, Path("test/minvar.txt"), overwrite=True)
+
+    display_heatmap(p2s, p3s, Path("test/minority.txt"), cmap="viridis")
+    display_heatmap(p2s, p3s, Path("test/minfrac.txt"), cmap="gnuplot")
+    display_heatmap(p2s, p3s, Path("test/minvar.txt"), cmap="inferno")
+
+
 def main():
     """
     Example usage:
@@ -343,6 +380,9 @@ def main():
     """
     cmd = sys.argv[1]
 
+    if cmd == "test":
+        plt.ion()
+        test()
     if cmd == "prepare":
         prepare()
     if cmd == "rps":

@@ -1,0 +1,61 @@
+name: Run Examples
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bvp-run:
+    name: test boundary value problems
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          cd ./examples/boundary_value_problems
+          pdm run bvp.py test
+
+  gol-run:
+    name: test game of life
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          cd ./examples/game_of_life
+          pdm run gol.py test
+
+  ising-run:
+    name: test ising model
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          cd ./examples/ising_model
+          pdm run ising.py test
+          pdm run antiferromagnet.py test
+
+  rps-run:
+    name: test rock paper scissors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          cd ./examples/rock_paper_scissors
+          pdm run rps.py test
+
+  sirs-run:
+    name: test sirs model
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          cd ./examples/sirs_model
+          pdm run sirs.py test
