@@ -2,7 +2,6 @@ name: Run Examples
 
 on:
   pull_request:
-    types: [opened, reopened]
   workflow_dispatch:
 
 permissions:
@@ -66,7 +65,7 @@ jobs:
           pdm run sirs.py test
 
   evo-run:
-    name: test sirs model
+    name: test ess
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

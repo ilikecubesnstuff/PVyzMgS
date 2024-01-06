@@ -241,7 +241,8 @@ def test():
     compute_rainbow_run(1 / 4, 3 / 4, sim, capacity, Path("test/rainbow_teamwork.txt"))
     compute_rainbow_run(3 / 4, 3 / 4, sim, capacity, Path("test/rainbow_mixed.txt"))
 
-    frac_avg = read_array(Path("ess/frac_avg.txt"))
+    # reading + display
+    frac_avg = read_array(Path("test/frac_avg.txt"))
     plt.imshow(frac_avg.T, origin="lower", extent=extent)
     plt.title("Teamwork Fraction")
     plt.xlabel("fighting penalty")
@@ -249,7 +250,7 @@ def test():
     plt.colorbar()
     plt.show()
 
-    frac_var = read_array(Path("ess/frac_var.txt"))
+    frac_var = read_array(Path("test/frac_var.txt"))
     plt.imshow(frac_var.T, origin="lower", extent=extent, vmax=np.mean(frac_var))
     plt.title("Teamwork Fraction Variance")
     plt.xlabel("fighting penalty")
@@ -257,9 +258,9 @@ def test():
     plt.colorbar()
     plt.show()
 
-    display_rainbow_run(Path("ess/rainbow_solo.txt"))
-    display_rainbow_run(Path("ess/rainbow_teamwork.txt"))
-    display_rainbow_run(Path("ess/rainbow_mixed.txt"))
+    display_rainbow_run(Path("test/rainbow_solo.txt"))
+    display_rainbow_run(Path("test/rainbow_teamwork.txt"))
+    display_rainbow_run(Path("test/rainbow_mixed.txt"))
 
 
 def main():
