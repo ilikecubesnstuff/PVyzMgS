@@ -112,13 +112,13 @@ def compute_rainbow_run(p1, p2, sim, steps, savepath):
     save_data(histories, savepath, overwrite=True)
 
 
-def display_rainbow_run(path):
+def display_rainbow_run(path: Path):
     data = read_data(path).T
-    cmap = mpl.colormaps["viridis"]
+    cmap = mpl.colormaps["winter"]
     steps = len(data)
     for i, line in enumerate(data):
-        # print((i + 1)/steps)
         plt.plot(line, color=cmap((i + 1) / steps), linewidth=0.8)
+    plt.title(path.name)
     plt.xlabel("iteration")
     plt.ylabel("teamwork fraction")
     plt.show()
@@ -179,55 +179,29 @@ def multirun_heatmap(p1s, p2s, sim):
     return frac_avg, frac_var
 
 
-def main():
-    # sim = TeamVsSolo(capacity=1000)
-    # cmap = mpl.colormaps['inferno']
-
-    # steps = 1000
-    # histories = []
-    # for i in tqdm(range(1, steps)):
-    #     # print(i/steps)
-    #     sim.reset(start=1000, team_frac=i/steps)
-    #     reward_matrix = [
-    #         [7/4, 2/4],
-    #         [6/4, 3/4]
-    #     ]
-    #     its = 200
-    #     history = []
-    #     gen = sim.run(reward_matrix, its)
-    #     # gen = progress_bar(gen, total=steps)
-    #     gen = record_measurements(gen, lambda s: s.solo, lambda s: s.teamwork, record=history)
-    #     no_animation(gen)
-
-    #     fractions = [a / (a + b) for a, b in history]
-    #     histories.append(fractions)
-
-    # save_data(histories, Path('data/fractions_1k.txt'), overwrite=True)
-
-    # data = read_data(Path('data/fractions_1k.txt')).T
-    # steps = len(data)
-    # for i, line in enumerate(data):
-    #     # print((i + 1)/steps)
-    #     plt.plot(line, color=cmap(1 - (i + 1)/steps), linewidth=0.8)
-    # plt.xlabel('iteration')
-    # plt.ylabel('teamwork fraction')
-    # plt.show()
-
-    # sim = TeamVsSolo(capacity=1000)
-    # p1s = np.linspace(1/4, 4/4, 30 + 1)
-    # p2s = np.linspace(1/4, 4/4, 30 + 1)
-    # extent = (1/4, 4/4, 1/4, 4/4)
-
-    sim = TeamVsSolo(capacity=2000)
-    p1s = np.linspace(0 / 4, 4 / 4, 50 + 1)
-    p2s = np.linspace(0 / 4, 4 / 4, 50 + 1)
-    extent = (0 / 4, 4 / 4, 0 / 4, 4 / 4)
+def prepare():
+    capacity = 500
+    sim = TeamVsSolo(capacity=capacity)
+    p1s = np.linspace(0, 1, 21)
+    p2s = np.linspace(0, 1, 21)
     frac_avg, frac_var = heatmap(p1s, p2s, sim)
+    save_array(frac_avg, Path("ess/frac_avg.txt"), overwrite=True)
+    save_array(frac_var, Path("ess/frac_var.txt"), overwrite=True)
 
-    save_array(frac_avg, Path("data/frac_avg_fixed.txt"), overwrite=True)
-    save_array(frac_var, Path("data/frac_var_fixed.txt"), overwrite=True)
+    sim = TeamVsSolo(capacity=capacity)
+    compute_rainbow_run(3 / 4, 1 / 4, sim, capacity, Path("ess/rainbow_solo.txt"))
+    compute_rainbow_run(1 / 4, 3 / 4, sim, capacity, Path("ess/rainbow_teamwork.txt"))
+    compute_rainbow_run(3 / 4, 3 / 4, sim, capacity, Path("ess/rainbow_mixed.txt"))
 
-    frac_avg = read_array(Path("data/frac_avg_fixed.txt"))
+    compute_rainbow_run(1 / 4, 1 / 4, sim, capacity, Path("ess/rainbow_boundary.txt"))
+    compute_rainbow_run(0.45, 3 / 4, sim, capacity, Path("ess/rainbow_scboundary1.txt"))
+    compute_rainbow_run(3 / 4, 0.45, sim, capacity, Path("ess/rainbow_scboundary2.txt"))
+
+
+def display():
+    extent = (0, 1, 0, 1)
+
+    frac_avg = read_array(Path("ess/frac_avg.txt"))
     plt.imshow(frac_avg.T, origin="lower", extent=extent)
     plt.title("Teamwork Fraction")
     plt.xlabel("fighting penalty")
@@ -235,48 +209,72 @@ def main():
     plt.colorbar()
     plt.show()
 
-    frac_var = read_array(Path("data/frac_var_fixed.txt"))
+    frac_var = read_array(Path("ess/frac_var.txt"))
     plt.imshow(frac_var.T, origin="lower", extent=extent, vmax=np.mean(frac_var))
     plt.title("Teamwork Fraction Variance")
     plt.xlabel("fighting penalty")
     plt.ylabel("cooperation penalty")
     plt.colorbar()
-    # plt.show()
+    plt.show()
 
-    # sim = TeamVsSolo(capacity=1000)
-    # compute_rainbow_run(3/4, 1/4, sim, 1000, Path('data/rainbow_75_25.txt'))
-    # compute_rainbow_run(1/4, 3/4, sim, 1000, Path('data/rainbow_25_75.txt'))
-    # compute_rainbow_run(3/4, 3/4, sim, 1000, Path('data/rainbow_75_75.txt'))
+    display_rainbow_run(Path("ess/rainbow_solo.txt"))
+    display_rainbow_run(Path("ess/rainbow_teamwork.txt"))
+    display_rainbow_run(Path("ess/rainbow_mixed.txt"))
 
-    # display_rainbow_run(Path('data/rainbow_25_75.txt'))
-    # display_rainbow_run(Path('data/rainbow_75_25.txt'))
-    # display_rainbow_run(Path('data/rainbow_75_75.txt'))
+    display_rainbow_run(Path("ess/rainbow_boundary.txt"))
+    display_rainbow_run(Path("ess/rainbow_scboundary1.txt"))
+    display_rainbow_run(Path("ess/rainbow_scboundary2.txt"))
 
-    # sim = TeamVsSolo(capacity=100)
-    # p1s = np.linspace(0/4, 4/4, 20 + 1)
-    # p2s = np.linspace(0/4, 4/4, 20 + 1)
-    # extent = (0/4, 4/4, 0/4, 4/4)
-    # frac_avg, frac_var = multirun_heatmap(p1s, p2s, sim)
 
-    # save_array(frac_avg, Path('data/multi_frac_avg_coarse.txt'), overwrite=True)
-    # save_array(frac_var, Path('data/multi_frac_var_coarse.txt'), overwrite=True)
+def test():
+    capacity = 50
+    sim = TeamVsSolo(capacity=capacity)
+    p1s = np.linspace(0, 1, 6)
+    p2s = np.linspace(0, 1, 6)
+    extent = (0, 1, 0, 1)
+    frac_avg, frac_var = heatmap(p1s, p2s, sim)
+    save_array(frac_avg, Path("test/frac_avg.txt"), overwrite=True)
+    save_array(frac_var, Path("test/frac_var.txt"), overwrite=True)
 
-    # frac_avg = read_array(Path('data/multi_frac_avg_coarse.txt'))
-    # frac_var = read_array(Path('data/multi_frac_var_coarse.txt'))
+    sim = TeamVsSolo(capacity=capacity)
+    compute_rainbow_run(3 / 4, 1 / 4, sim, capacity, Path("test/rainbow_solo.txt"))
+    compute_rainbow_run(1 / 4, 3 / 4, sim, capacity, Path("test/rainbow_teamwork.txt"))
+    compute_rainbow_run(3 / 4, 3 / 4, sim, capacity, Path("test/rainbow_mixed.txt"))
 
-    # plt.imshow(frac_avg.T, origin='lower', extent=extent)
-    # plt.title('Teamwork Fraction')
-    # plt.xlabel('fighting penalty')
-    # plt.ylabel('cooperation penalty')
-    # plt.colorbar()
-    # plt.show()
+    frac_avg = read_array(Path("ess/frac_avg.txt"))
+    plt.imshow(frac_avg.T, origin="lower", extent=extent)
+    plt.title("Teamwork Fraction")
+    plt.xlabel("fighting penalty")
+    plt.ylabel("cooperation penalty")
+    plt.colorbar()
+    plt.show()
 
-    # plt.imshow(np.log(frac_var.T), origin='lower', extent=extent)
-    # plt.title('Teamwork Fraction Variance (log scale)')
-    # plt.xlabel('fighting penalty')
-    # plt.ylabel('cooperation penalty')
-    # plt.colorbar()
-    # plt.show()
+    frac_var = read_array(Path("ess/frac_var.txt"))
+    plt.imshow(frac_var.T, origin="lower", extent=extent, vmax=np.mean(frac_var))
+    plt.title("Teamwork Fraction Variance")
+    plt.xlabel("fighting penalty")
+    plt.ylabel("cooperation penalty")
+    plt.colorbar()
+    plt.show()
+
+    display_rainbow_run(Path("ess/rainbow_solo.txt"))
+    display_rainbow_run(Path("ess/rainbow_teamwork.txt"))
+    display_rainbow_run(Path("ess/rainbow_mixed.txt"))
+
+
+def main():
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        plt.ion()
+        print("running test script")
+        test()
+        return
+
+    if not Path("ess/").exists():
+        print("running preparation script")
+        prepare()
+    display()
 
 
 if __name__ == "__main__":

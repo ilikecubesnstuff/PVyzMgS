@@ -64,3 +64,14 @@ jobs:
           pdm install
           cd ./examples/sirs_model
           pdm run sirs.py test
+
+  evo-run:
+    name: test sirs model
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/setup-pdm@v3
+      - run: |
+          pdm install
+          cd ./examples/evolution
+          pdm run ess.py test
