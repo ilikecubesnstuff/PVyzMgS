@@ -37,3 +37,7 @@ A degradation process model is simulated on a square lattice.
 
 Simulation of a square lattice with [rock, paper, and scissors](https://en.wikipedia.org/wiki/Rock_paper_scissors) states as a cellular automaton.
 Analyses the dynamics of the minority fraction with both deterministic and random update rules.
+
+## Evolutionary Stable Strategies
+
+Inspired by [Primer](https://www.youtube.com/@PrimerBlobs)'s video titled ["Simulating the Evolution of Teamwork"](https://youtu.be/TZfh8hpJIxo?si=vHD79-ukgiDfVoaO) - a simulation of a population with "solo" and "teamwork" strategies for survival. The system exhibits a phase transition and supercritical behavior when varying cooperation penalty and fighting penalty (scenarios detailed in the video).
